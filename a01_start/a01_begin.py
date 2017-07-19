@@ -37,6 +37,11 @@ print(os.getcwd())
 import this
 
 
+# str: 문자열 또는 형태로 
+# list : 데이터 나열.
+# dict: 사전, 나중에 유용하게 쓰임.
+# type : java script의 typeof
+
 
 
 
