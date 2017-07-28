@@ -74,4 +74,5 @@ print('##### slice rank between 3 and 5\n',data062)
 data07 = data02[data02.ratio > 0.53]
 print('##### ratio > 53%\n',data07)
 
+### upto a08_dataframe Prac done.
 
