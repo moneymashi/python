@@ -6,8 +6,12 @@ Created on 2017. 7. 28.
 
 '''
 csv 파일저장
+df.to_csv(  ~~)  ## df데이터는 DataFrame형태여야 수월.
 1.Series , DataFrame 객체. to_csv
-
+2.sep : 구분자 설정.
+3. na_rep: Nan값을 원하는 형식으로 replace
+4. index, header값을 false 대입해서 idx,col출력 안되게.
+5. cols  필요한 컬럼이름지정.
 
 
 '''

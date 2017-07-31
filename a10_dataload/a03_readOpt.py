@@ -12,7 +12,8 @@ import numpy as np
 import pandas as pd
 
 ## chunksize ::로딩할떄 , 한번에 읽어 올 데이터건수.
-parser = pd.read_csv('good.csv', header = None, chunksize = 3)  ##chunksize 나누기갯수.
+cols = ['name', 'prodNum', 'price']
+parser = pd.read_csv('good.csv', header = None, chunksize = 4)  ##chunksize 나누기갯수.
 print(parser ,' read_csv// chunksize = 3')
 
 # 반복문을 통해 데이터 가져오기
@@ -25,7 +26,7 @@ for piece in parser:
 import csv
 items = pd.read_csv('fruit.csv', header =None)
 print(items)
-## csv 객체를 통한 reaade호라용 -ㅇ파일릭기, delimiter지원
+## csv 객체를 통한 read활용 -파일읽기, delimiter지원
 lines = list( csv.reader(open('fruit.csv'), delimiter = '|'))  ##import csv  ,, |는 or단자.
 print(lines)
 
