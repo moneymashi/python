@@ -27,7 +27,6 @@ Created on 2017. 7. 31.
 from pandas import Series, DataFrame
 import numpy as np 
 import pandas as pd
-import csv
 import sys, pymysql
 
 ## url로 처리
@@ -49,8 +48,8 @@ tree = ET.parse(response)
 # 5. 최상위 객체지정
 root = tree.getroot()
 # 6. 실제 데이터를 찾기위함 item
-items = root.findall('item')  ## findall 스펠링조심, 여기는 .//item이 아니다.
-
+items = root.findall('span')  ## findall 스펠링조심, 여기는 .//item이 아니다.
+print(items)
 # 7. 전체 데이터를 담기위한 list객체 선언.
 ar = []
 ## 배열[].append(단위객체)
@@ -60,10 +59,10 @@ ar = []
 
 for imsi in items:
     item = {}
-    item['title'] = imsi.find('title').text
-    item['latitude'] = imsi.find('latitude').text
-    item['longitude'] = imsi.find('longitude').text
-    
+#     item['title'] = imsi.find('title').text
+#     item['latitude'] = imsi.find('latitude').text
+#     item['longitude'] = imsi.find('longitude').text
+#     
     # 위의 item 객체를 할당후, 배열에 append()로 할당.
     ar.append(item)
 print(ar)
