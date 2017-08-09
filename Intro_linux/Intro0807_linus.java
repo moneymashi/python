@@ -43,7 +43,9 @@ public class Intro0807_linus {
  *
  *	ls :: 디렉터리 파일정보리스트
  *	-l  ::모든 속성ㅈ어보
- *	-a :: 숨김파일로 지정된 파일까지 보기위함. 
+ *	-a :: 숨김파일로 지정된 파일까지 보기위함.
+ *	-R :: 현재와 하위디렉터리까지.
+ *	-t :: 가장 최신에 사용순서대로 파일정렬.    ##### 
  *	ls -l /usr  :: 특정디렉터리 내용확인법.
  *  ls *.cfg : cfg로 끝나는 파일리스트
  *	
@@ -104,12 +106,14 @@ public class Intro0807_linus {
  * cp :: copy   참고:http://webdir.tistory.com/139
  * 					http://corej21.tistory.com/42
  * 
+ * mv 옵션 기본파일 이동/변경파일
+ * -f : 이동할 위치에 동일 파일잇어도 강제이동.
  * 
- * 
- * find
+ * find  #####
  * : 시스템에서 원하는 조건에 맞는 파일을 찾고자할떄 사용.
  * 형식:: find 경로명 조건옵션 파일이름(*, ?? ...)
  * 동작옵션들
+ * 
  * 
  * 조건옵션
  * -group : 지정그룹의 소유파일
@@ -141,6 +145,7 @@ public class Intro0807_linus {
  * cd findexp
  * touch a01.txt
  * == find /home/vagrant/* -type d -name 'find*' -exec touch {}/a01.txt \;
+ * 	##### d: directory  find라는 파일들. {}: 결과(디렉터리). 주의: {}는 복수일수잇음.
  * touch a01.txt
  * mkdir a01work
  * == find /home/vagrant/* -type d -name 'find*' -exec mkdir {}/a01work \;
@@ -149,9 +154,16 @@ public class Intro0807_linus {
  * touch -c *
  * rm -rf *
  * 
+ * ##### sudo  ::???
+ * sudo find /home/vagrant/* -type d -name 'test1*' -exec mv {}/exp01.txt {}/exp10.log \;
+ *   ###### {} == sudo find /home/vagrant/* -type d -name 'test1*'의 결과값
+ * 
+ * ** sudo는 find의 권한을 강화시켜줌.
+ * ** sudo가 su에 비해 더 좋음 :su는 고유신분에 기반해서 권한이동. sudo는 비밀번호 공유필요없음.
  * 
  * 
- * ---------- 사용자 권한
+ * 
+ * ----------##### 사용자 권한 :: 하둡에서 가장 실수가많은부분, 권한의 범위설정.
  * chmod (change mode)
  * : 파일과 사용자ㄱ권한 변경처리..
  * 파일권한: 소유자, 그룹, 그외사용자
@@ -180,9 +192,9 @@ public class Intro0807_linus {
  * 1. 지정용량이상 파일검색.
  * find /home/vagrant -size +30c -print
  * 2. 해당파일 백업파일생성.
- * find /home/vagrant/* -size +30c -exec cp {} /home/vagrant/backup.txt  \;  ## 오답
+ * find /home/vagrant/* -size +30c -exec cp {} /home/vagrant/backups \; 
  * 3. 해당원본파일 삭제.
- * find /home/vagrant/* -size +30c -exec rm -rf {} \; ## 오답
+ * find /home/vagrant/* -size +30c -exec rm -rf {} \; 
  * 
  * 
  * 
