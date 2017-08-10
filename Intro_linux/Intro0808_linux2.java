@@ -2,7 +2,7 @@ package doc;
 
 public class Intro0808_linux2 {
 /*
- * ############사용자 권한.
+ * ############사용자 계정관리.
  * 리눅스 최상위 관리자 : root
  * 계정관련 정보파일들
  * cat /etc/passwd : 사용자 계정정보
@@ -39,6 +39,8 @@ public class Intro0808_linux2 {
  * 	ex) chage -M 20 user01 # 최대 20일 사용
  * -m : 암호를 주기적으로 변경
  * 	ex) chage -m 7 user01 # 최소 7일 사용
+ * -W : 설정된 암호의 만료 @@전부터 warning 설정.
+ * 	ex) chage -W 5 user01  ## 만료 5일전부터 알람.
  * 
  * 사용자 속성중 그룹관련처리
  * usermod -g 그룹명 그룹변경계정
@@ -59,8 +61,28 @@ public class Intro0808_linux2 {
  * 특정 사용자를 그룹에 추가.
  * gpasswd -a 사용자 그룹명	
  * 
+ * -------Prac
+ * 임의의 계정 6개 만들고
+ * grpA
+ * grpB
+ * grpC설정후 각각 2개씩 소유하게.
+ * 해당그룹중 첫번쨰 계정을 뽑아 grpD설정, 추가.
  * 
- *  
+ * #### 참고:
+ * useradd -g grpA user001  ## grpA가 존재해야함.
+ * tail /etc/group
+ * >> 그룹명, 그룹id만뜸
+
+ * gpasswd -a user001 grpA ## user001과 grpA가 존재해야함.
+ * tail /etc/group
+ * >> 그룹명, 그룹id, 소속user 모두 뜸.
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
  * 
  * 
  * 
