@@ -121,6 +121,8 @@ public class Intro0811_linux2 {
  * 	echo '탕'
  * fi
  * 
+ * --------PRac
+ * 점수를 입력받아 입력한 점수에 대하여 학점 A~F로 환산해주는 .sh을 만들라.
  * 
  */
 }
