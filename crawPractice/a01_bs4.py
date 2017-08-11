@@ -13,6 +13,7 @@ http://market.cetizen.com/market.php?q=market&auc_sale=1&escrow_motion=3&sc=1&qs
 
 // 문제점:  li > span 이 각 267개나 된다:: 금액, 배송비, 판매자, 날짜(계산) 데이터 추출이 불가능.
 
+20미만 sold 데이터  뽑아내기
 
 
 
@@ -22,7 +23,7 @@ from bs4 import BeautifulSoup as BS
 
 def spider(max_pages):
     page = 1
-    listUL = ['> span > s > span > a', '> div > a > span', '> span > span > a']
+    listUL = ['> span > s > span > a']
     while page< max_pages+1 :
         url = 'http://market.cetizen.com/market.php?q=market&auc_sale=1&escrow_motion=3&sc=1&qs=&auc_wireless=&auc_uid=&stype=&akeyword=&just_one=&just_one_name=&just_one_pcat=&view_type=&m%5B1%5D=1&auc_price1=&auc_price2=&keyword_p=&pno=&pw=&p='+ str(page)
         source_code = requests.get(url)
@@ -34,46 +35,46 @@ def spider(max_pages):
 #             for s01 in soupSel01:
 #                 print(s01.text)
         sold = []
-        model = []
-        title = []
-        for liOrder in range(len(listUL)):
-            soupSel01 = soup.select('ul > li ' + listUL[liOrder] )
-            for (s01,p) in zip(soupSel01, range(len(soupSel01)) ):
-#             print(s01.text)
-                if p%3 ==0:
-                    sold.append(s01.text)
-                elif p%3 ==1:
-                    model.append(s01.text)
-                else:
-                    title.append(s01.text)
-        print(sold)
-        print(page,' :len(sold): ',len(sold))
-        print(model)
-        print(page,' :len(model): ',len(model))
-        print(title)
-        print(page,' :len(title): ',len(title))
-        model = []
-        title = []
-        
-        b = soup.findAll('span', {'class': 'ls-0'})
         price = []
         deliveryFee = []
         seller = []
-#         for (j,q) in zip(b,range(len(b)) ):
-#             if q>5:
-#     #             print(q,' :: ' ,j.text)
-#                 if q%3 ==0:
-#                     price.append(j.text)
-#                 elif q%3 ==1:
-#                     deliveryFee.append(j.text)
-#                 else:
-#                     seller.append(j.text)
-#         print(price)
-#         print(page,' :len(price): ', len(price))
-#         print(deliveryFee)
-#         print(page,' :len(deliveryFee): ', len(deliveryFee))
-#         print(seller)
-#         print(page,' :len(seller): ', len(seller))
+        p = q =0
+        
+        for liOrder in range(len(listUL)):
+            soupSel01 = soup.select('ul > li ' + listUL[liOrder] )
+            print(soupSel01)
+            for (s01,p) in zip(soupSel01, range(len(soupSel01)) ):
+                sold.append(s01.text)
+                print('s01.text',s01.text)
+                if s01.text != '':
+                    infos = soup.findAll('span', {'class': 'b ls-0'})
+                    print('liOrder',liOrder)
+                    print('infos',infos)
+        print(sold)
+        print(page,' :len(sold): ',len(sold))
+        
+
+        b = soup.findAll('span', {'class': 'ls-0'})
+        
+        if len(sold) != 0 :
+            for (j,q) in zip(b,range(len(b)) ):
+                if q>5:
+        #             print(q,' :: ' ,j.text)
+                    if q%3 ==0:
+                        price.append(j.text)
+                    elif q%3 ==1:
+                        deliveryFee.append(j.text)
+                    else:
+                        seller.append(j.text)
+#             print(price[p])
+#             print(page,' :len(price): ', len(price))
+#             print(deliveryFee[p])
+#             print(page,' :len(deliveryFee): ', len(deliveryFee))
+#             print(seller[p])
+#             print(page,' :len(seller): ', len(seller))
+
+        
+        sold = []
         price = []
         deliveryFee = []
         seller = []
@@ -83,6 +84,6 @@ def spider(max_pages):
 
 
 print('#' * 30 ,"")
-spider(5)
+spider(7)
 
 
