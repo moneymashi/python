@@ -57,7 +57,7 @@ public class Intro0809_linux {
  * 형태+ugo권한, 링크수, user, group, size, date, file/dirName 
  * 
  * 
- * =================== 
+ * =================== CH6
  * vi
  * 입력모드 - a(add), i, o, s
  * 명령모드 - esc버튼
