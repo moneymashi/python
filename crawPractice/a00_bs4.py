@@ -22,8 +22,12 @@ from bs4 import BeautifulSoup as BS
 
 def spider(max_pages):
     page = 1
-    listUL = ['> div > a', '> span > span > a > span']
+    listUL = [' > span > s > span > a ', '> div > a', '> span > span > a > span']
     while page< max_pages:
+        
+        print('#'*40 )
+        print('#'*40, ' page: ', page )
+        print('#'*40 )
         url = 'http://market.cetizen.com/market.php?q=market&auc_sale=1&escrow_motion=3&sc=1&qs=&auc_wireless=&auc_uid=&stype=&akeyword=&just_one=&just_one_name=&just_one_pcat=&view_type=&m%5B1%5D=1&auc_price1=&auc_price2=&keyword_p=&pno=&pw=&p='+ str(page)
         source_code = requests.get(url)
         plain_text = source_code.text
@@ -33,16 +37,21 @@ def spider(max_pages):
 #             soupSel01 = soup.select('ul > li ' + listUL[li] )
 #             for s01 in soupSel01:
 #                 print(s01.text)
+        sold = []
         model = []
         title = []
         for liOrder in range(len(listUL)):
             soupSel01 = soup.select('ul > li ' + listUL[liOrder] )
             for (s01,p) in zip(soupSel01, range(len(soupSel01)) ):
 #             print(s01.text)
-                if p%2 ==0:
+                if p%3 ==0:
+                    sold.append(s01.text)
+                elif p%3 ==1:
                     model.append(s01.text)
                 else:
                     title.append(s01.text)
+        print(sold)
+        print(page,' :: ',len(sold))
         print(model)
         print(page,' :: ',len(model))
         print(title)
@@ -69,6 +78,7 @@ def spider(max_pages):
         print('len(deliveryFee):: ', len(deliveryFee))
         print(seller)
         print('len(seller):: ', len(seller))
+        
         price = []
         deliveryFee = []
         seller = []
@@ -76,29 +86,12 @@ def spider(max_pages):
         page+=1
 
 
-# def soupEach(soup, which, page):
-#     model = []
-#     title = []
-#     soupSel01 = soup.select('ul > li ' + which )
-#     for (s01,p) in zip(soupSel01, range(len(soupSel01)) ):
-# #             print(s01.text)
-#         if p%2 ==0:
-#             model.append(s01.text)
-#         else:
-#             title.append(s01.text)
-#     print(model)
-#     print(page,' :: ',len(model))
-#     print(title)
-#     print(page,' :: ',len(title))
-#     model = []
-#     title = []
 
 
 
 
 
 
-print('#' * 30 ,"")
 spider(10)
 
 

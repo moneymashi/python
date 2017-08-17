@@ -22,10 +22,6 @@ from bs4 import BeautifulSoup as BS
 
 def spider(max_pages):
     page = 1
-    listUL = ['> span > s > span > a',   ##sold title
-              '> div > a > span ',   ## model num
-              '> span > span > a > span'] ## title
-    ## sold out + title = 20
     while page< max_pages+1 :
         url = 'http://market.cetizen.com/market.php?q=market&auc_sale=1&escrow_motion=3&sc=1&qs=&auc_wireless=&auc_uid=&stype=&akeyword=&just_one=&just_one_name=&just_one_pcat=&view_type=&m%5B1%5D=1&auc_price1=&auc_price2=&keyword_p=&pno=&pw=&p='+ str(page)
         source_code = requests.get(url)
@@ -41,27 +37,25 @@ def spider(max_pages):
         soldModel = []
         model = []
         title = []
-        for liOrder in range(len(listUL)):
-            soupSel01 = soup.select('ul > li ' + listUL[liOrder] )  ## 이거 .map function 해도 먹힐거같다?
-            for s01 in soupSel01:
-                if liOrder%3 ==0:
-                    soldTitle.append(s01.text)
-                elif liOrder%3 ==1:
-                    model.append(s01.text)
-                else:
-                    title.append(s01.text)
-        print(soldTitle)
-        print(page,' :len(sold): ',len(soldTitle))
-        print(model)
-        print(page,' :len(model): ',len(model))
-        print(title)
-        print(page,' :len(title): ',len(title))
-        sold = []
-        
+        allPrice = []
+        soupSel01 = soup.select('ul > li ' )  ## 이거 .map function 해도 먹힐거같다?
+        for s01 in soupSel01:
+#             print(s01)
+            s02 = s01.findAll('span', {'class': 'ls-0'})  ## X 이런걸로 모드 태그설정??
+            print(s02)
+            for t01 in s02:
+                print(t01.text)
+                allPrice.append(t01.text)
+#         print(soldTitle)
+#         print(page,' :len(sold): ',len(soldTitle))
+#         print(model)
+#         print(page,' :len(model): ',len(model))
+#         print(title)
+#         print(page,' :len(title): ',len(title))
 #         model = []
 #         title = []
 
-
+        print(allPrice)
 
         price = []
         deliveryFee = []
@@ -93,6 +87,6 @@ def spider(max_pages):
 
 
 print('#' * 30 ,"")
-spider(5)
+spider(1)
 
 
