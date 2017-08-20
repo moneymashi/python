@@ -50,12 +50,12 @@ def spider(max_pages):
                     model.append(s01.text)
                 else:
                     title.append(s01.text)
-        print(sold)
-        print(page,' :: ',len(sold))
-        print(model)
-        print(page,' :: ',len(model))
-        print(title)
-        print(page,' :: ',len(title))
+#         print(sold)
+#         print(page,' :: ',len(sold))
+#         print(model)
+#         print(page,' :: ',len(model))
+#         print(title)
+#         print(page,' :: ',len(title))
         model = []
         title = []
         
@@ -64,14 +64,7 @@ def spider(max_pages):
         deliveryFee = []
         seller = []
         for (j,q) in zip(b,range(len(b)) ):
-            if q>5:
-    #             print(q,' :: ' ,j.text)
-                if q%3 ==0:
-                    price.append(j.text)
-                elif q%3 ==1:
-                    deliveryFee.append(j.text)
-                else:
-                    seller.append(j.text)
+            print(q,' :: ' ,j.text)
         print(price)
         print('len(price):: ', len(price))
         print(deliveryFee)

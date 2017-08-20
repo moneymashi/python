@@ -30,8 +30,7 @@ def spider(max_pages):
     while page< max_pages+1 :
         print('#' * 30 ,'   page ::' , page)
         url = 'http://market.cetizen.com/market.php?q=market&auc_sale=1&escrow_motion=3&sc=1&qs=&auc_wireless=&auc_uid=&stype=&akeyword=&just_one=&just_one_name=&just_one_pcat=&view_type=&m%5B1%5D=1&auc_price1=&auc_price2=&keyword_p=&pno=&pw=&p='+ str(page)
-        source_code = requests.get(url)
-        plain_text = source_code.text
+        plain_text = requests.get(url).text
         soup = BS(plain_text, 'lxml')  ## lxml은 html.parser보다 월등히빠름.
         
 #         for li in range(len(listUL)):
