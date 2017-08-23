@@ -16,7 +16,7 @@ http://creativeworks.tistory.com/entry/how-to-insert-dataframe-data-into-mysql-d
 http://blog.naver.com/PostView.nhn?blogId=hmkuak&logNo=220583392375
 
 ######
-Aug21, 2017. 20:06
+Aug23, 2017. 19:43
 JB
 
 Work Done
@@ -31,10 +31,13 @@ Work Done
 6. soldLists로 df에 state_name,state_code 추가..
 
 
+-------- Aug 23, 2017
+2. last4 options>> 설명나누기!!  ex) span['onmouseover']
+3. 분, 초 -> 오늘날짜.
+
  ## programming TODO:: 
 -------- Aug 22, 2017
 00. 가독성증가용 :: 함수/ 클래스화. 제발 ㅜㅜ
-2. last4 options>> 설명나누기!!  ex) span['onmouseover']
 3. All listed prices 더 좋은방법 모색. <<< if, elif가 필요없다.
 4. S(SK),K(KT),L(LG U+) 통신사 태크 제외시키고 저장..
 5. 인기가 없거나 "데이터가 많은걸 저장"하고, 웹페이지에서 필터적용할수 있게끔.
@@ -62,11 +65,12 @@ from sqlalchemy import create_engine
 import pymysql, sys
 from datetime import datetime
 import re
+from string import digits
 
 def spider(startPage, endPage):
     page = startPage
-    
     while page< endPage+1 :
+        
         # board table.
         titles = []         # list_title
         soldTitles = []     # temp. soldLists추출용.
@@ -78,20 +82,21 @@ def spider(startPage, endPage):
         deliverFees = []    # 배달비용 0~
         sellerNames = []    # phone_seller
         
-        options = []        # phone_options ex) 만료선택확정중
-                            # A/S: 무상 보증 미확인 ,보증: 무상 보증기간 잔여 , 만료:무상 보증기간 만료
+        options = []        # temp. phone_options ex) 만료선택확정중
                             # 선택: 선택약정(20% 요금할인 약정가입) 적용가능 , 불가: 선택약정할인 적용불가
-                            # 확정: 확정기변, 유심: 유심기변
-                            # 미사용, 상(무흠집), 중(생활흠집), 하(번인/잔상/파손)
-        option1 = []
-        option2 = []
-        option3 = []
+        guarantee = []      # A/S: 무상 보증 미확인 ,보증: 무상 보증기간 잔여 , 만료:무상 보증기간 만료
+        contrant = []       # 선택: 선택약정(20% 요금할인 약정가입) 적용가능 , 불가: 선택약정할인 적용불가
+        changes = []        # 확정: 확정기변, 유심: 유심기변
+        conditions = []     # 미사용, 상(무흠집), 중(생활흠집), 하(번인/잔상/파손)
         pInfoSet = []       # temp. aucNos.phoneId.phoneName 모음.
+        agency = []         # 통신사 SK, KT, LG
         
         # phone table
         phoneId = []        # phone_id      # http://market.cetizen.com/market.php?q=info&pno=phoneId    ## 해당 폰 정보
         models = []         # phone_model    
         phoneName = []      # phone_name    
+        
+        date = datetime.now().strftime('%Y-%m-%d')
         print('#' * 30 )
         print('#' * 30 ,"   page ::", page)
         print('#' * 30 )
@@ -121,35 +126,70 @@ def spider(startPage, endPage):
                 if idx ==0:
                     prices.append(sellInfo.text)
                 elif idx ==1:
-                    deliverFees.append(sellInfo.text)
+                    deliverFees.append(sellInfo.text.replace('무료','0').replace('-','0'))
                 elif idx ==2:
                     sellerNames.append(sellInfo.text)
             # selling time.  
             sTimes = uls.findAll('li', {'style': 'width:5%;float:left;overflow:hidden;text-align:center;padding-top:2px;'})
             for sTime in sTimes:
-                sellTimes.append(sTime.text)
-            
-            # four options
-            fourOps = uls.findAll('span', {'style':  re.compile('float:left;display:block;overflow:hidden;width:.*')})
-#             print(fourOps)
+                if '-' in sTime.text:
+                    time01 = datetime.strptime(sTime.text, '%m-%d')
+                    time02 = time01.replace(year=2017).strftime('%Y-%m-%d')
+                    sellTimes.append(time02)
+                else:
+                    sellTimes.append(date)
+                    
+        # four options
+        soupSel04 = soup.select('li')
+        for lis in soupSel04:
+#             print(lis)
+            fourOps = lis.findAll('span', {'style': re.compile('float:left;display:block;overflow:hidden;width:.*.margin-left:5px.*')})
+#             liss = uls.findAll('li', {'style':  'width:16%;float:right;overflow:hidden;padding-right:0px;text-align:right;'})
             for fourOp in fourOps:
-                for f in fourOp:
-                    print(f)
-            print(len(fourOp))
-#                 options.append(fourOp['onmouseover'].strip('OnUserMenuShow(').strip(');').replace("'","") )
-    
-            
+                if fourOp.has_attr('onmouseover') :
+#                     print(fourOp['onmouseover'].strip('OnIconShow(').strip(');').replace("'","").lstrip(digits).replace(",","") )    
+                    options.append(fourOp['onmouseover'].strip('OnIconShow(').strip(');').replace("'","").lstrip(digits).replace(",","") )    
+                elif fourOp.has_attr('title') :
+#                     print(fourOp['title'])
+                    options.append(fourOp['title'])
+                else:
+                    options.extend( ['(미등록)','(미등록)'] )
+#         print(' ::: ', len(options),' ::: ', (options))
+        for op, idx in zip(options, range(len(options)) ):
+#             print(idx, ' :: ', op)
+            if idx%4 ==0 :
+                guarantee.append(op)
+            elif idx%4 ==1 :
+                contrant.append(op)
+            elif idx%4 ==2 :
+                changes.append(op.replace('유심기변 확정기변','모름'))
+            elif idx%4 ==3 :
+                conditions.append(op)
 
         # 팔린물품 in 전체물품 -> 비교해서 index번호 따기.
         if len(soldTitles) != 0:
             soldLists = [titles.index(x) for x in soldTitles] # index number(0 ~) in the list.
             for soldItemNo in soldLists:
                 itemState[soldItemNo] = 'sold out'
-           
         # Model id.
         soupSel02 = soup.select('ul > li > div > a > span' )  ## 이거 .map function 해도 먹힐거같다?
         for allModel in soupSel02:
-            models.append(allModel.text)
+            tempModel = allModel.text
+            agentLetter = tempModel.split(' ')[0][-1]
+            if agentLetter == 'L' or agentLetter == 'K' or agentLetter == 'S':
+                tempList = tempModel.split(' ')
+                tempList[0] = tempList[0][0:-1]
+                tempModel = " ".join(str(s) for s in tempList) 
+                if agentLetter == 'L':
+                    agency.append('LG U+')
+                elif agentLetter == 'S':
+                    agency.append('SKT')
+                elif agentLetter == 'K':
+                    agency.append('KT')
+            else:
+                agency.append('All')
+                        
+            models.append(tempModel)
           
         soupSel03 = soup.select('li')
         for lis in soupSel03:
@@ -175,25 +215,36 @@ def spider(startPage, endPage):
             phoneId.append(pInfo.split(',')[1]) 
             phoneName.append(pInfo.split(',')[2])
         
-        df = DataFrame(data = {'models':models,
-                        'titles': titles,
-                        'prices': prices,
-                        'deliverFees': deliverFees,
-                        'sellerNames': sellerNames,
-                        'itemState': itemState,
-                        'sellTimes': sellTimes,
-                        'aucNos': aucNos,
-                        'phoneId': phoneId,
-                        'phoneName': phoneName,
-                        'options': options })
+        df = DataFrame(data = {
+                        'aucNos': aucNos,#1
+                        'models':models,#1
+                        'agency': agency,
+                        'phoneName': phoneName,#1
+                        'prices': prices,#1
+                        'itemState': itemState,#
+                        
+                        'sellTimes': sellTimes, #1
+                        'sellerNames': sellerNames,#1
+                        'guarantee': guarantee,#1
+                        'contrant': contrant,#1
+                        'changes': changes,#1
+                        
+                        'conditions': conditions,#1
+                        'titles': titles,#
+                        'deliverFees': deliverFees,#1
+                        'phoneId': phoneId })#1
+        
+        df = df[['aucNos','models','agency','phoneName','prices','itemState',
+                 'sellTimes','sellerNames','guarantee','contrant','changes',
+                 'conditions','titles','deliverFees','phoneId']]
         
         # 페이지 넓게 보여줌.
         pd.set_option('expand_frame_repr', False)
-        print(df)
+#         print(df)
         
-        print(df.describe())   
+#         print(df.describe())   
             
-#         dfToMaria(df)
+        dfToMaria(df)
         
         page+=1
     ### while loop END
@@ -210,7 +261,7 @@ def dfToMaria(df):
                               user = 'root', passwd = '11111', 
                               db = 'crawl', charset = 'utf8')
         engine = create_engine('mysql+mysqlconnector://root:11111@localhost:3306/crawl', echo=False)
-        df.to_sql(name='table0822_test01', con=engine, if_exists = 'append', index=False)
+        df.to_sql(name='table0823_test002', con=engine, if_exists = 'append', index=False)
         
         con.commit()
         print('-'*30, ' insert df in Maria :: Well done')
@@ -226,7 +277,7 @@ def dfToMaria(df):
 
 
 s1 = datetime.now()
-spider(8, 18) ## page start, end.
+spider(1,10) ## page start, end.
 s2 = datetime.now()
 print('$'*50, 'time elapsed :: ', s2-s1)
 
