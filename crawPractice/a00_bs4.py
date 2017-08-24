@@ -34,12 +34,12 @@ Work Done
 -------- Aug 23, 2017
 2. last4 options>> 설명나누기!!  ex) span['onmouseover']
 3. 분, 초 -> 오늘날짜.
+4. S(SK),K(KT),L(LG U+) 통신사 태크 제외시키고 저장..
 
  ## programming TODO:: 
 -------- Aug 22, 2017
 00. 가독성증가용 :: 함수/ 클래스화. 제발 ㅜㅜ
 3. All listed prices 더 좋은방법 모색. <<< if, elif가 필요없다.
-4. S(SK),K(KT),L(LG U+) 통신사 태크 제외시키고 저장..
 5. 인기가 없거나 "데이터가 많은걸 저장"하고, 웹페이지에서 필터적용할수 있게끔.
 
 4. 슬슬 데이터 -> matplot사용해서 그래프그리기.
@@ -187,7 +187,7 @@ def spider(startPage, endPage):
                 elif agentLetter == 'K':
                     agency.append('KT')
             else:
-                agency.append('All')
+                agency.append('N/A')
                         
             models.append(tempModel)
           
